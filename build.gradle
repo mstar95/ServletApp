@@ -1,0 +1,50 @@
+group 'ServletApp'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'war'
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        maven {
+            url 'https://dl.bintray.com/nikit007/mvn-repo/'
+        }
+    }
+    dependencies {
+        classpath "com.github.nikit.cpp.helpers:db:1.0.7" // need for use helpers.MysqlHelper
+        classpath "gradle.plugin.com.github.nikit.cpp:wildflyDeployPlugin:1.0.8"
+    }
+}
+
+apply plugin: "com.github.nikit.cpp.wildfly.deploy"
+
+
+
+
+
+deployConfig {
+    deployFile = "scripts/deploy" // list of files to deploy
+    boxes = [
+            'Local' : [
+                    wildfly:new helpers.Server(username:"mstar",password:"haslo",hostname:"localhost")
+            ]
+    ]
+}
+
+sourceCompatibility = 1.8
+
+
+
+final def var = repositories {
+    mavenCentral()
+}
+var
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
+    compileOnly "org.projectlombok:lombok:1.16.10"
+}
